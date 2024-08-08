@@ -13,6 +13,9 @@ class TinkoffAcquiring:
         """The method creates payment: the seller receives a link to the payment form and must redirect the buyer to it"""
         return self._call('Init', payload=payload)
 
+    def GetQR(self, payment_id: str) -> dict:
+        return self._call('GetQr', payload={'PaymentId': payment_id,'DataType':'PAYLOAD'})
+
     def state(self, payment_id: str) -> dict:
         """Returns the current payment status"""
         return self._call('GetState', payload={'PaymentId': payment_id})
@@ -21,7 +24,7 @@ class TinkoffAcquiring:
         payload.update({'TerminalKey': self.terminal})
 
         response = requests.post(
-            f'https://securepay.tinkoff.ru/v2/{method}/',
+            f'https://securepay.tinkoff.ru/v2/{method}',
             json={
                 'Token': self._get_token(payload),
                 **payload,
